@@ -1,38 +1,37 @@
 import board
 import digitalio
 import time
+from adafruit_debouncer import Debouncer
 
-# Green led is plugged into GP2
-# Red led is plugged into GP15
-# Button 1 is plugged into GP0
-# Button 2 is plugged into GP16
+# Setting up the button
+button_pin = digitalio.DigitalInOut(board.GP12)
+button_pin.direction = digitalio.Direction.INPUT
+button_pin.pull = digitalio.Pull.UP
+my_button = Debouncer(button_pin)
 
-led = digitalio.DigitalInOut(board.LED)
-led.direction = digitalio.Direction.OUTPUT
-
-greenled = digitalio.DigitalInOut(board.GP2)
+# Setting up the LEDs
+greenled = digitalio.DigitalInOut(board.GP17)
 greenled.direction = digitalio.Direction.OUTPUT
-
-redled = digitalio.DigitalInOut(board.GP15)
+redled = digitalio.DigitalInOut(board.GP16)
 redled.direction = digitalio.Direction.OUTPUT
 
-button1 = digitalio.DigitalInOut(board.GP0)
-button1.direction = digitalio.Direction.INPUT
-button1.pull = digitalio.Pull.UP
-
-button2 = digitalio.DigitalInOut(board.GP16)
-button2.direction = digitalio.Direction.INPUT
-button2.pull = digitalio.Pull.UP
-
 while True:
-    if button1.value is False and button2.value is False:
+    my_button.update()
+    if my_button.value is True:
+        print("not pressed")
         greenled.value = False
+        redled.value = False
+    if my_button.value is False:
+        print("pressed")
+        greenled.value = True
         redled.value = True
-
-    elif button1.value is False or button2.value is False:
+    if my_button.fell is True:
+        print("Just pressed")
         greenled.value = True
         redled.value = False
-
-    else:
+    if my_button.rose is True:
+        print("Just released")
         greenled.value = False
-        redled.value = False
+        redled.value = True
+    time.sleep(0.5)
+
