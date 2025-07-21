@@ -47,14 +47,12 @@ def beat_highscore():
 while True:
     my_button.update()
     if my_button.rose is True:
-        print("Just released")
         blueled.value = False
         print("Starting...")
         # Breaks out of this code after user starts the game
         break
     # Blue LED is on, indicating the game is on standby
     if my_button.value is True:
-        print("Not pressed")
         blueled.value = True
     time.sleep(0.1)
 
@@ -69,7 +67,6 @@ while True:
     my_button.update()
     blueled.value = True
     if my_button.fell is True:
-        print("Just pressed:")
         # Calculates user reaction time
         user_score = time.monotonic() - lighton_time
         print(f"your reaction time is {user_score}")
